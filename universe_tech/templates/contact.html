@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Contact | Universe Tech{% endblock %}
+{% block desc %}Call, WhatsApp or visit Universe Tech in Gishushu, Gasabo, Kigali. Tell us about your project.{% endblock %}
+{% block content %}
+
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">Contact Us</p>
+      <h1>Get in Touch With<br><span class="gold">Universe Tech</span></h1>
+      <p class="lead">Have a project in mind or a question about our services? Reach out and our team will get back to you within one business day.</p>
+      <ul class="badges">
+        <li><span class="bico"><svg><use href="#i-clock"/></svg></span>Reply Within<br>1 Business Day</li>
+        <li><span class="bico"><svg><use href="#i-wa"/></svg></span>Call or<br>WhatsApp</li>
+        <li><span class="bico"><svg><use href="#i-users"/></svg></span>Dedicated<br>Team</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/sp-hero.jpg' %}" alt="Universe Tech website and mobile app on a laptop and phone"></div>
+</section>
+
+<section class="ct-info-sec">
+  <div class="wrap ct-cards">
+    <article class="ct-info">
+      <span class="ct-ico"><svg><use href="#i-phone"/></svg></span>
+      <h3>Call Us</h3>
+      <a class="ct-val" href="tel:{{ site.phone }}">{{ site.phone_display }}</a>
+      <p>Speak directly with our team.</p>
+      <a class="ct-act" href="tel:{{ site.phone }}">Call now <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </article>
+    <article class="ct-info">
+      <span class="ct-ico"><svg><use href="#i-wa"/></svg></span>
+      <h3>WhatsApp</h3>
+      <a class="ct-val" href="https://wa.me/{{ site.phone_digits }}" target="_blank" rel="noopener">{{ site.phone_display }}</a>
+      <a class="ct-val ct-val-2" href="https://wa.me/{{ site.whatsapp_only_digits }}" target="_blank" rel="noopener">{{ site.whatsapp_only_display }}</a>
+      <p>Message us any time with questions or files.</p>
+      <a class="ct-act" href="https://wa.me/{{ site.phone_digits }}" target="_blank" rel="noopener">Start a chat <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </article>
+    <article class="ct-info">
+      <span class="ct-ico"><svg><use href="#i-pin"/></svg></span>
+      <h3>Visit Us</h3>
+      <p class="ct-val">{{ site.address }}</p>
+      <p>Visits are by appointment, so please call or message first.</p>
+      <a class="ct-act" href="{{ site.map_link }}" target="_blank" rel="noopener">Get directions <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </article>
+    {% if site.email %}
+    <article class="ct-info">
+      <span class="ct-ico"><svg><use href="#i-mail"/></svg></span>
+      <h3>Email Us</h3>
+      <a class="ct-val" href="mailto:{{ site.email }}">{{ site.email }}</a>
+      <p>For proposals and detailed enquiries.</p>
+      <a class="ct-act" href="mailto:{{ site.email }}">Send an email <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </article>
+    {% endif %}
+  </div>
+</section>
+
+<section class="ct-main">
+  <div class="wrap">
+    <div class="ct-split">
+      <div class="ct-side">
+        <p class="eyebrow line gold-e">Start a Project</p>
+        <h2>Let's Build Something Great Together</h2>
+        <p class="ct-side-lead">Tell us about your idea. We will review it and come back with the right plan for your goals and budget.</p>
+        <ol class="ct-steps">
+          <li><b>Send your message</b><span>Share a few details about what you need.</span></li>
+          <li><b>We get back to you</b><span>Within one business day, by phone or WhatsApp.</span></li>
+          <li><b>Receive a clear plan</b><span>A tailored proposal and quotation for your project.</span></li>
+        </ol>
+        <p class="ct-side-foot">Prefer a formal price? <a href="{% url 'quote' %}">Request a quotation</a></p>
+      </div>
+      <div class="ct-form">
+        <h2>Send Us a Message</h2>
+        <p class="ct-form-sub">Complete the form and your message opens in WhatsApp, ready to send.</p>
+        <form id="wa-form" novalidate>
+          <div class="ct-row">
+            <div class="field"><label for="wa-name">Your name</label><input id="wa-name" type="text" autocomplete="name" placeholder="Full name" required></div>
+            <div class="field"><label for="wa-svc">Service needed</label>
+              <select id="wa-svc">
+                <option>Website or web application</option>
+                <option>Mobile app</option>
+                <option>Custom software</option>
+                <option>Branding and design</option>
+                <option>Hosting and deployment</option>
+                <option>Something else</option>
+              </select></div>
+          </div>
+          <div class="field"><label for="wa-msg">Your message</label><textarea id="wa-msg" rows="5" placeholder="Tell us about your project..." required></textarea></div>
+          <button class="btn btn-wa" type="submit"><svg class="ic"><use href="#i-wa"/></svg>Send via WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ct-map-sec">
+  <div class="wrap">
+    <div class="ct-map">
+      <iframe src="{{ site.map_embed }}" title="Universe Tech location on Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <div class="ct-addr">
+        <span class="ct-ico sm"><svg><use href="#i-pin"/></svg></span>
+        <div><b>Universe Tech</b><span>{{ site.address }}</span></div>
+        <a class="btn btn-green btn-sm" href="{{ site.map_link }}" target="_blank" rel="noopener">Directions</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{% static 'js/contact.js' %}" data-phone="{{ site.phone_digits }}"></script>
+{% endblock %}

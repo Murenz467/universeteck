@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ q.number }} | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>{{ q.title }}</h1>
+<p><span class="badge b-{{ q.status }}">{{ q.get_status_display }}</span> <span class="muted">{{ q.number }}{% if q.valid_until %} · valid until {{ q.valid_until|date:"j M Y" }}{% endif %}</span></p></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% if q.intro %}{{ q.intro|linebreaks }}{% endif %}
+  <table class="tbl"><thead><tr><th>Item</th><th>Qty</th><th>Unit (RWF)</th><th>Total (RWF)</th></tr></thead><tbody>
+  {% for i in q.items.all %}<tr><td>{{ i.description }}</td><td>{{ i.quantity }}</td><td>{{ i.unit_price|intcomma }}</td><td>{{ i.line_total|intcomma }}</td></tr>{% endfor %}
+  </tbody><tfoot><tr><th colspan="3">Total</th><th>{{ q.total|intcomma }} RWF</th></tr></tfoot></table>
+  {% if q.status == "sent" %}
+  <form method="post" action="{% url 'quotation_respond' q.pk %}" class="cta-row">{% csrf_token %}
+    <button name="action" value="accept" class="btn btn-gold">Accept quotation</button>
+    <button name="action" value="decline" class="btn btn-dark">Decline</button>
+  </form>{% endif %}
+</div></section>
+{% endblock %}

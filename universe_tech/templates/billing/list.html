@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}Invoices | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>Invoices</h1>
+  <div class="facts"><div><span>Outstanding</span><b>{{ outstanding|rwf }}</b></div><div><span>Paid to date</span><b>{{ paid|rwf }}</b></div></div></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% for i in invoices %}<a class="card link" href="{% url 'invoice' i.pk %}"><div class="row"><strong>{{ i.number }} · {{ i.total|rwf }}</strong><span class="badge b-{{ i.status }}">{{ i.get_status_display }}</span></div>
+    <p class="muted small">{{ i.title }}{% if i.due_date and i.status == "sent" %} · due {{ i.due_date|date:"j M Y" }}{% endif %}{% if i.is_overdue %} · <span class="late">overdue</span>{% endif %}</p></a>
+  {% empty %}<p class="muted">No invoices yet.</p>{% endfor %}
+</div></section>
+{% endblock %}

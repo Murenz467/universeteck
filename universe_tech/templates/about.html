@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}About Us | Universe Tech{% endblock %}
+{% block desc %}Meet Universe Tech: our vision, mission, objectives and values, and our founder Murenzi Charles. Software, branding and hosting from Kigali, Rwanda.{% endblock %}
+{% block content %}
+
+<!-- HERO (same design as Services) -->
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">About Us</p>
+      <h1>Innovative. Reliable.<br>Always<br><span class="gold">With You</span></h1>
+      <p class="lead">Universe Tech is a Kigali-based technology company that builds software, web and mobile applications, brand identities and secure hosting for businesses that want to grow in the digital world.</p>
+      <ul class="badges">
+        <li><span class="bico"><svg><use href="#i-shield"/></svg></span>Quality<br>&amp; Security</li>
+        <li><span class="bico"><svg><use href="#i-clock"/></svg></span>On-Time<br>Delivery</li>
+        <li><span class="bico"><svg><use href="#i-users"/></svg></span>Client<br>Partnership</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/sp-hero.jpg' %}" alt="Universe Tech laptop, phone, brand notebook and mug"></div>
+</section>
+
+<!-- WHO WE ARE -->
+<section class="white ab-who">
+  <div class="wrap about-grid">
+    <div class="about-img"><img src="{% static 'img/about.jpg' %}" alt="The Universe Tech team working together around a laptop" loading="lazy"></div>
+    <div class="ab-prose">
+      <p class="eyebrow line">Who We Are</p>
+      <h2 class="big">One Team for Software, Brand and Hosting</h2>
+      <p>Universe Tech was founded in Kigali with a simple belief: Rwandan businesses deserve the same quality of digital tools as any company in the world, at a price that makes sense for them.</p>
+      <p>Today we design and build custom software, websites, mobile apps and brand identities, and we host and look after them once they are live. Instead of juggling a developer, a designer and a hosting company, our clients work with one accountable team from the first idea to long-term support.</p>
+      <p>Every project follows a clear path: a written proposal, a signed agreement, phase-by-phase approval and transparent progress on your own client portal. You always know what is happening, what it costs and what comes next.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VISION & MISSION -->
+<section class="mint ab-vm">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Our Direction</p>
+      <h2 class="big">Vision &amp; Mission</h2>
+      <p class="sub">Where we are going, and how we get there every day.</p>
+    </div>
+    <div class="ab-vm-grid">
+      <article class="ab-big ab-vision">
+        <span class="ab-ico"><svg><use href="#i-bulb"/></svg></span>
+        <p class="ab-tag">Our Vision</p>
+        <p class="ab-statement">{{ vision }}</p>
+      </article>
+      <article class="ab-big ab-mission">
+        <span class="ab-ico"><svg><use href="#i-bolt"/></svg></span>
+        <p class="ab-tag">Our Mission</p>
+        <p class="ab-statement">{{ mission }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIVES -->
+<section class="white ab-obj">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">What We Aim For</p>
+      <h2 class="big">Our Objectives</h2>
+      <p class="sub">The goals that guide our work, our decisions and how we measure success.</p>
+    </div>
+    <ol class="ab-obj-grid">
+      {% for title, text in objectives %}
+      <li><span class="ab-num">{{ forloop.counter|stringformat:"02d" }}</span><h3>{{ title }}</h3><p>{{ text }}</p></li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="dark ab-founder">
+  <div class="wrap ab-founder-grid">
+    <div class="ab-photo">
+      <img src="{% static 'img/founder.jpg' %}" alt="Murenzi Charles, founder of Universe Tech" width="800" height="1000" loading="lazy">
+    </div>
+    <div class="ab-bio">
+      <p class="eyebrow line gold-e">Meet the Founder</p>
+      <h2>Murenzi Charles</h2>
+      <p class="ab-role">Founder &amp; Lead Developer, Universe Tech</p>
+      <p>Charles is a full-stack software developer from Kigali who builds real-world platforms for the Rwandan market. He works mainly with Flutter for mobile apps and Django REST Framework for secure, scalable back-end systems, and he is completing his Bachelor's degree in Software Engineering at the Adventist University of Central Africa (AUCA).</p>
+      <p>He started Universe Tech to give local businesses a dependable technology partner: one that explains things clearly, delivers what it promises and stays around after launch. He leads the team's engineering and works directly with clients to turn their ideas into products people use every day.</p>
+      <blockquote class="ab-quote">Technology should work for the business owner, not the other way around. Our job is to make it simple, secure and worth every franc.<cite>Murenzi Charles, Founder</cite></blockquote>
+      <ul class="ab-tags" aria-label="Areas of expertise">
+        {% for e in expertise %}<li>{{ e }}</li>{% endfor %}
+      </ul>
+      <div class="cta-row">
+        <a class="btn btn-gold" href="{% url 'contact' %}">Talk to Charles <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="mint ab-values">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">What We Stand For</p>
+      <h2 class="big">Our Core Values</h2>
+    </div>
+    <div class="ab-val-grid">
+      {% for name, text, icon in values %}
+      <article class="ab-val">
+        <span class="ab-vico"><svg><use href="#{{ icon }}"/></svg></span>
+        <h3>{{ name }}</h3>
+        <p>{{ text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- HOW WE WORK -->
+<section class="white ab-process">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">How We Work</p>
+      <h2 class="big">A Clear Path From Idea to Launch</h2>
+      <p class="sub">Six simple stages, with your approval at every phase.</p>
+    </div>
+    <ol class="ab-steps">
+      {% for name, text in steps %}
+      <li><span class="ab-num sm">{{ forloop.counter }}</span><b>{{ name }}</b><span>{{ text }}</span></li>
+      {% endfor %}
+    </ol>
+    <ul class="ab-why">
+      {% for name, text in why %}<li><svg><use href="#i-check"/></svg><span><b>{{ name }}.</b> {{ text }}</span></li>{% endfor %}
+    </ul>
+    <p class="center" style="margin-top:28px"><a class="btn btn-green" href="{% url 'how_we_work' %}">See the full process <svg class="ic"><use href="#i-arrow"/></svg></a></p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band">
+  <svg class="cta-curves" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true"><path d="M60 200C150 140 260 90 400 20" fill="none" stroke="#e2b94e" stroke-width="1.5"/><path d="M110 200C200 150 300 110 400 60" fill="none" stroke="#e2b94e" stroke-width="1.5"/></svg>
+  <div class="wrap cta-in">
+    <div>
+      <p class="eyebrow line gold-e">Let's Work Together</p>
+      <h2>Ready to Build Something Great?</h2>
+      <p>Tell us about your idea and we will come back with a clear plan and price.</p>
+    </div>
+    <a class="btn btn-gold" href="{% url 'quote' %}">Get a Quote <svg class="ic"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+{% endblock %}

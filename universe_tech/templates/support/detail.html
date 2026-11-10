@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Ticket #{{ t.pk }} | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>{{ t.subject }}</h1>
+<p><span class="badge b-{{ t.status }}">{{ t.get_status_display }}</span>{% if t.project %} <span class="muted">· {{ t.project }}</span>{% endif %}</p></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% for m in t.messages.all %}
+  <div class="bubble {% if m.is_staff %}staff{% endif %}"><div class="row"><strong>{% if m.is_staff %}Universe Tech{% else %}You{% endif %}</strong><span class="muted">{{ m.created|date:"j M, H:i" }}</span></div>{{ m.body|linebreaks }}</div>
+  {% endfor %}
+  {% if t.status != "closed" %}
+  <form method="post" class="form">{% csrf_token %}
+    {% for f in form %}<div class="field">{{ f.label_tag }}{{ f }}{% for e in f.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>{% endfor %}
+    <div class="cta-row"><button class="btn btn-gold" type="submit">Reply</button>
+    <button class="btn btn-dark" name="action" value="close" type="submit" formnovalidate>Close ticket</button></div>
+  </form>
+  {% else %}<p class="muted">This ticket is closed. <a class="dark-link" href="{% url 'ticket_new' %}">Open a new one</a> if you need more help.</p>{% endif %}
+</div></section>
+{% endblock %}

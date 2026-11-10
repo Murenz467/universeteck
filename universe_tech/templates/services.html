@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Services | Universe Tech{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">Our Services</p>
+      <h1>Professional Digital<br>Solutions for Your<br><span class="gold">Business</span></h1>
+      <p class="lead">At Universe Tech, we offer a complete range of digital services to help your business grow, stand out and succeed in the modern world.</p>
+      <ul class="badges">
+        <li><span class="bico"><svg><use href="#i-shield"/></svg></span>Quality<br>Work</li>
+        <li><span class="bico"><svg><use href="#i-clock"/></svg></span>On-Time<br>Delivery</li>
+        <li><span class="bico"><svg><use href="#i-users"/></svg></span>Client<br>Satisfaction</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/sp-hero.jpg' %}" alt="Universe Tech laptop, phone, brand notebook and mug"></div>
+</section>
+
+<!-- WHAT WE OFFER -->
+<section class="white sp-offer">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Our Services</p>
+      <h2 class="big">What We Offer</h2>
+      <p class="sub">We specialize in key areas of digital technology, each designed to give your business the tools it needs to grow, innovate and stay ahead.</p>
+    </div>
+
+    <div class="sp-cards">
+      {% for c in categories %}
+      <article class="sp-card" id="{{ c.slug }}">
+        <div class="sp-body">
+          <div class="sp-top">
+            <span class="ico">
+              <svg>{% if 'host' in c.slug %}<use href="#i-cloud"/>{% elif 'brand' in c.slug %}<use href="#i-brand"/>{% elif 'soft' in c.slug %}<use href="#i-code"/>{% else %}<use href="#i-devices"/>{% endif %}</svg>
+            </span>
+            <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
+          </div>
+          <h3>{{ c.name }}</h3>
+          <p class="desc">{{ c.tagline }}</p>
+          <ul class="checks">
+            {% for s in c.services.all %}
+            <li><svg><use href="#i-check"/></svg><a href="{% url 'quote' %}?service={{ s.slug }}" title="Request a quote for {{ s.name }}">{{ s.name }}</a></li>
+            {% endfor %}
+          </ul>
+          <a class="btn btn-green btn-sm" href="{% url 'quote' %}">Request a Quote <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="sp-shot">
+          <img alt="" src="{% if 'host' in c.slug %}{% static 'img/sp-hosting.jpg' %}{% elif 'brand' in c.slug %}{% static 'img/sp-brand.jpg' %}{% elif 'soft' in c.slug %}{% static 'img/sp-software.jpg' %}{% else %}{% static 'img/sp-webmobile.jpg' %}{% endif %}">
+        </div>
+      </article>
+      {% empty %}
+      <p class="muted">Services will appear here. Add them in the admin, or run <code>python manage.py seed_services</code>.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="mint sp-why">
+  <svg class="wave wave-l" viewBox="0 0 180 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V50C40 45 80 20 130 0c-30 40-20 90 50 130z" fill="#2b1d10" opacity=".9"/><path d="M0 70C50 70 90 40 140 0" fill="none" stroke="#c8982e" stroke-width="1.5"/></svg>
+  <svg class="wave wave-r" viewBox="0 0 180 130" preserveAspectRatio="none" aria-hidden="true"><path d="M180 130V60C140 55 100 30 50 0c30 40 20 90-50 130z" fill="#2b1d10" opacity=".85"/><path d="M180 80C130 80 90 50 40 10" fill="none" stroke="#c8982e" stroke-width="1.5"/></svg>
+  <div class="wrap why-grid">
+    <div class="why-intro">
+      <p class="eyebrow gold-e2">Why Choose Us</p>
+      <h2>Your Trusted Tech Partner</h2>
+      <p>We combine creativity, technology and dedication to deliver solutions that make a real difference.</p>
+    </div>
+    <ul class="why-items">
+      <li><svg><use href="#i-bulb"/></svg><b>Experienced<br>Team</b><span>Skilled professionals passionate about technology.</span></li>
+      <li><svg><use href="#i-shield"/></svg><b>Reliable<br>&amp; Secure</b><span>Your data and ideas are always protected.</span></li>
+      <li><svg><use href="#i-clock"/></svg><b>On-Time<br>Delivery</b><span>We respect your time and deadlines.</span></li>
+      <li><svg><use href="#i-headset"/></svg><b>Ongoing<br>Support</b><span>We're with you beyond launch.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band sp-cta">
+  <div class="wrap cta-in">
+    <div class="cta-left">
+      <svg class="plane"><use href="#i-plane"/></svg>
+      <div>
+        <h2>Ready to Work With Us?</h2>
+        <p>Let's discuss your project and turn your ideas into reality.</p>
+      </div>
+    </div>
+    <a class="btn btn-gold" href="{% url 'quote' %}">Get a Quote <svg class="ic"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% if items %}
+<section class="white tr-logos">
+  <div class="wrap">
+    <p class="tr-logos-t">Trusted by growing businesses across Rwanda</p>
+    <ul class="tr-logo-row">
+      {% for c in items %}
+      <li>{% if c.website %}<a href="{{ c.website }}" target="_blank" rel="noopener noreferrer nofollow">{% endif %}{% if c.logo %}<img src="{{ c.logo.url }}" alt="{{ c.name }}" loading="lazy" height="44">{% else %}<span class="tr-word">{{ c.name }}</span>{% endif %}{% if c.website %}</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% if has_sample %}<p class="tr-note">Sample client names shown. Replace them in Admin &rsaquo; Trust &amp; pricing &rsaquo; Client logos.</p>{% endif %}
+  </div>
+</section>
+{% endif %}

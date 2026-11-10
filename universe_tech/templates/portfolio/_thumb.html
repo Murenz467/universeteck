@@ -1,0 +1,3 @@
+{% comment %}Case study image, or a branded placeholder when no image was uploaded.{% endcomment %}
+{% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.title }}" loading="lazy">
+{% else %}<div class="pf-ph" aria-hidden="true"><svg>{% if 'host' in c.category.slug %}<use href="#i-cloud"/>{% elif 'brand' in c.category.slug %}<use href="#i-brand"/>{% elif 'soft' in c.category.slug %}<use href="#i-code"/>{% else %}<use href="#i-devices"/>{% endif %}</svg></div>{% endif %}

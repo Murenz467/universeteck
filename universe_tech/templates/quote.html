@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Request a Quote | Universe Tech{% endblock %}
+{% block desc %}Request a free quotation for your website, app, branding or hosting project. We reply within one business day.{% endblock %}
+{% block content %}
+
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">Get a Quote</p>
+      <h1>Request Your<br><span class="gold">Free Quotation</span></h1>
+      <p class="lead">Tell us what you need and we will send a clear, tailored quotation for your project.</p>
+      <ul class="badges">
+        <li><span class="bico"><svg><use href="#i-check"/></svg></span>Free<br>Quotation</li>
+        <li><span class="bico"><svg><use href="#i-clock"/></svg></span>Reply Within<br>1 Business Day</li>
+        <li><span class="bico"><svg><use href="#i-users"/></svg></span>Dedicated<br>Team</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/sp-hero.jpg' %}" alt="Universe Tech website and mobile app on a laptop and phone"></div>
+</section>
+
+<section class="qt-sec">
+  <div class="wrap qt-grid">
+
+    <form method="post" class="qt-form" novalidate>
+      {% csrf_token %}
+      <div style="position:absolute;left:-9999px" aria-hidden="true">{{ form.website }}</div>
+      {% if form.non_field_errors %}<div class="qt-errors">{% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}</div>{% endif %}
+
+      <div class="qt-block">
+        <h2><span>1</span>Your details</h2>
+        <div class="qt-row">
+          <div class="field"><label for="{{ form.name.id_for_label }}">Full name *</label>{{ form.name }}{% for e in form.name.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>
+          <div class="field"><label for="{{ form.email.id_for_label }}">Email *</label>{{ form.email }}{% for e in form.email.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>
+          <div class="field"><label for="{{ form.phone.id_for_label }}">Phone / WhatsApp</label>{{ form.phone }}{% for e in form.phone.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>
+          <div class="field"><label for="{{ form.company.id_for_label }}">Company</label>{{ form.company }}{% for e in form.company.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>
+        </div>
+      </div>
+
+      <div class="qt-block">
+        <h2><span>2</span>What do you need?</h2>
+        <p class="qt-hint">Select everything that applies.</p>
+        {% for cat in categories %}{% if cat.services.all %}
+        <div class="qt-cat">
+          <p class="qt-cat-name">{{ cat.name }}</p>
+          <div class="qt-chips">
+            {% for s in cat.services.all %}
+            <label class="qt-chip"><input type="checkbox" name="services" value="{{ s.pk }}" {% if s.pk in selected %}checked{% endif %}><span>{{ s.name }}</span></label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}{% endfor %}
+        {% for e in form.services.errors %}<p class="err">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="qt-block">
+        <h2><span>3</span>Your project</h2>
+        <div class="field"><label for="{{ form.budget.id_for_label }}">Estimated budget</label>{{ form.budget }}{% for e in form.budget.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>
+        <div class="field"><label for="{{ form.details.id_for_label }}">Tell us about your project *</label>{{ form.details }}{% for e in form.details.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>
+      </div>
+
+      <div class="qt-submit">
+        <button class="btn btn-green" type="submit">Send Quote Request <svg class="ic"><use href="#i-arrow"/></svg></button>
+        <p>Your details are used only to prepare your quotation.</p>
+      </div>
+    </form>
+
+    <aside class="qt-side">
+      <div class="qt-card dark-card">
+        <h3>What happens next</h3>
+        <ol class="ct-steps">
+          <li><b>We review your request</b><span>Our team studies your needs and goals.</span></li>
+          <li><b>We contact you</b><span>By phone or WhatsApp within one business day.</span></li>
+          <li><b>You receive a quotation</b><span>A clear plan with pricing in RWF.</span></li>
+        </ol>
+      </div>
+      <div class="qt-card">
+        <h3>Prefer to talk?</h3>
+        <p>Speak to us directly and we will help you get started.</p>
+        <a class="qt-line" href="tel:{{ site.phone }}"><svg><use href="#i-phone"/></svg>{{ site.phone_display }}</a>
+        <a class="qt-line" href="https://wa.me/{{ site.phone_digits }}" target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>WhatsApp us</a>
+        <a class="qt-line" href="{{ site.map_link }}" target="_blank" rel="noopener"><svg><use href="#i-pin"/></svg>{{ site.address }}</a>
+      </div>
+    </aside>
+
+  </div>
+</section>
+{% endblock %}

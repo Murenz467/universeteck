@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}{{ project.title }} | Universe Tech{% endblock %}
+{% block content %}
+{% if preview %}<div class="preview-bar">Staff preview of {{ project.client }}'s project</div>{% endif %}
+<section class="ivory page-head"><div class="wrap">
+  <p class="crumbs"><a href="{% url 'project_list' %}">My projects</a> / {{ project.title }}</p>
+  <h1>{{ project.title }}</h1>
+  <p><span class="badge b-{{ project.status }}">{{ project.get_status_display }}</span>
+  {% if project.is_late %}<span class="badge b-open">Behind schedule</span>{% endif %}</p>
+  <div class="bar big" role="progressbar" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"><i style="width:{{ project.progress }}%"></i></div>
+  <p class="muted">{{ project.progress }}% complete — {{ milestones|length }} phase{{ milestones|length|pluralize }}, each approved by you.</p>
+  <div class="facts">
+    <div><span>Started</span><b>{{ project.start_date|date:"j M Y"|default:"—" }}</b></div>
+    <div><span>Target finish</span><b>{{ project.target_date|date:"j M Y"|default:"—" }}</b></div>
+    <div><span>{% if project.days_left is not None and project.status != "completed" %}{% if project.days_left < 0 %}Days over{% else %}Days left{% endif %}{% else %}Status{% endif %}</span><b>{% if project.status == "completed" %}Done{% elif project.days_left is not None %}{% if project.days_left < 0 %}{{ project.days_left|cut:"-" }}{% else %}{{ project.days_left }}{% endif %}{% else %}—{% endif %}</b></div>
+    <div><span>Your contact</span><b>{% if project.manager %}{{ project.manager.get_full_name|default:project.manager.username }}{% else %}Universe Tech{% endif %}</b></div>
+  </div>
+</div></section>
+
+<section class="ivory"><div class="wrap pj-grid">
+  <div class="pj-main">
+    {% if project.description %}<div class="card plain">{{ project.description|linebreaks }}</div>{% endif %}
+
+    <h2>Phases</h2>
+    {% for m in milestones %}
+    <div class="card ms ms-{{ m.status }}" id="m{{ m.pk }}">
+      <div class="row"><strong>{{ forloop.counter }}. {{ m.title }}</strong><span class="badge b-{{ m.status }}">{{ m.get_status_display }}</span></div>
+      <p class="muted small">{% if m.due_date %}Due {{ m.due_date|date:"j M Y" }}{% if m.is_overdue %} · <span class="late">overdue</span>{% endif %}{% endif %}{% if m.amount %} · {{ m.amount|rwf }}{% endif %}{% if m.approved_at %} · approved {{ m.approved_at|date:"j M Y" }}{% endif %}</p>
+      {% if m.description %}<p>{{ m.description }}</p>{% endif %}
+      {% for d in m.deliverables.all %}<p class="file"><a class="dark-link" href="{% url 'download_deliverable' d.pk %}">⬇ {{ d.title }}</a> <span class="muted small">{{ d.uploaded|date:"j M Y" }}</span></p>{% endfor %}
+      {% if m.status == "changes" and m.client_feedback %}<p class="note"><b>Your feedback:</b> {{ m.client_feedback }}</p>{% endif %}
+      {% if m.status == "ready" and not preview %}
+      <div class="cta-row">
+        <form method="post" action="{% url 'approve_milestone' m.pk %}">{% csrf_token %}<button class="btn btn-gold">Approve this phase</button></form>
+        <details class="chg"><summary class="btn btn-outline">Request changes</summary>
+          <form method="post" action="{% url 'milestone_changes' m.pk %}" class="form">{% csrf_token %}
+            <div class="field"><label for="c{{ m.pk }}">What should we change?</label><textarea id="c{{ m.pk }}" name="comment" rows="3" required></textarea></div>
+            <button class="btn btn-dark">Send feedback</button></form></details>
+      </div>
+      <p class="muted small">Approving confirms this phase matches what we agreed{% if project.contract %} and triggers the invoice for this phase{% endif %}.</p>
+      {% endif %}
+    </div>
+    {% empty %}<p class="muted">Phases will appear here once planning is done.</p>{% endfor %}
+
+    <h2>Activity</h2>
+    <ol class="feed">
+    {% for u in updates %}
+      <li class="{% if u.is_system %}sys{% endif %}"><span class="when">{{ u.created|date:"j M Y, H:i" }}</span>
+        <strong>{{ u.title }}</strong>{% if not u.is_system and u.author %} <span class="muted small">— {{ u.author.get_full_name|default:u.author.username }}</span>{% endif %}
+        {% if u.body %}<div class="body">{{ u.body|linebreaksbr }}</div>{% endif %}
+        {% if u.attachment %}<p><a class="dark-link" href="{% url 'download_attachment' u.pk %}">⬇ Download attachment</a></p>{% endif %}</li>
+    {% empty %}<li class="sys"><span class="muted">Updates from our team will appear here.</span></li>{% endfor %}
+    </ol>
+  </div>
+
+  <aside class="pj-side">
+    <div class="card plain"><h3>Documents</h3>
+      {% if proposal %}<p><a class="dark-link" href="{% url 'proposal' proposal.pk %}">Proposal {{ proposal.number }}</a></p>{% endif %}
+      {% if project.contract %}<p><a class="dark-link" href="{% url 'contract' project.contract.pk %}">Contract {{ project.contract.number }}</a></p>{% endif %}
+      {% if not proposal and not project.contract %}<p class="muted small">No documents linked.</p>{% endif %}
+    </div>
+    <div class="card plain"><h3>Invoices</h3>
+      {% for i in invoices %}<p class="row"><a class="dark-link" href="{% url 'invoice' i.pk %}">{{ i.number }} · {{ i.total|rwf }}</a><span class="badge b-{{ i.status }}">{{ i.get_status_display }}</span></p>
+      {% empty %}<p class="muted small">No invoices yet.</p>{% endfor %}
+    </div>
+    <div class="card plain"><h3>Questions?</h3><p class="muted small">Ask us about this project and we will reply on a support ticket.</p>
+      <a class="btn btn-outline" href="{% url 'ticket_new' %}?project={{ project.pk }}">Ask about this project</a></div>
+  </aside>
+</div></section>
+{% endblock %}

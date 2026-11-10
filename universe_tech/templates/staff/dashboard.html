@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}Staff dashboard | Universe Tech{% endblock %}
+{% block content %}
+<section class="dark page-head"><div class="wrap"><h1>Staff dashboard</h1>
+<p class="muted">{{ today|date:"l, j F Y" }} · <a class="textlink" href="{% url 'admin:index' %}">Open full admin</a></p></div></section>
+<section class="ivory"><div class="wrap">
+  <div class="stats">
+    {% for label, n, url in stats %}<a class="stat" href="{{ url }}"><b>{{ n }}</b><span>{{ label }}</span></a>{% endfor %}
+  </div>
+  {% if money %}<div class="pipe">{% for label, n in money %}<div><b>{{ n|rwf }}</b><span>{{ label }}</span></div>{% endfor %}</div>{% endif %}
+
+  <div class="quick">
+    {% if perms.proposals.add_proposal %}<a class="btn btn-gold" href="{% url 'admin:proposals_proposal_add' %}">+ New proposal</a>{% endif %}
+    {% if perms.contracts.view_contract %}<a class="btn btn-outline" href="{% url 'admin:contracts_contract_changelist' %}">Contracts</a>{% endif %}
+    {% if perms.projects.add_project %}<a class="btn btn-outline" href="{% url 'admin:projects_project_add' %}">+ New project</a>{% endif %}
+    {% if perms.billing.add_invoice %}<a class="btn btn-outline" href="{% url 'admin:billing_invoice_add' %}">+ New invoice</a>{% endif %}
+  </div>
+
+  {% if pipeline %}<h2>Lead pipeline</h2>
+  <div class="pipe">{% for label, n in pipeline %}<div><b>{{ n }}</b><span>{{ label }}</span></div>{% endfor %}</div>{% endif %}
+  <div class="two">
+    <div><h2>Follow-ups due</h2>
+      {% for r in due %}<a class="card link" href="{% url 'admin:quotes_quoterequest_change' r.pk %}"><div class="row"><strong>{{ r.name }}{% if r.company %} · {{ r.company }}{% endif %}</strong><span class="badge b-open">{{ r.follow_up_date|date:"j M" }}</span></div></a>
+      {% empty %}<p class="muted">No follow-ups due.</p>{% endfor %}
+      <h2>Projects behind schedule</h2>
+      {% for p in late_projects %}<a class="card link" href="{% url 'admin:projects_project_change' p.pk %}"><div class="row"><strong>{{ p.title }}</strong><span class="badge b-open">due {{ p.target_date|date:"j M" }}</span></div><p class="muted small">{{ p.client }}</p></a>
+      {% empty %}<p class="muted">Everything is on schedule.</p>{% endfor %}
+    </div>
+    <div><h2>Recent leads</h2>
+      {% for r in recent %}<a class="card link" href="{% url 'admin:quotes_quoterequest_change' r.pk %}"><div class="row"><strong>{{ r.name }}</strong><span class="badge">{{ r.get_status_display }}</span></div>
+        <p class="muted small">{{ r.created|date:"j M" }}{% if r.assigned_to %} · {{ r.assigned_to }}{% endif %}</p></a>
+      {% empty %}<p class="muted">No leads yet.</p>{% endfor %}
+      <h2>Latest project activity</h2>
+      {% for a in activity %}<a class="card link" href="{% url 'admin:projects_project_change' a.project_id %}"><strong>{{ a.title }}</strong><p class="muted small">{{ a.project }} · {{ a.created|timesince }} ago</p></a>
+      {% empty %}<p class="muted">No activity yet.</p>{% endfor %}
+    </div>
+  </div>
+</div></section>
+{% endblock %}

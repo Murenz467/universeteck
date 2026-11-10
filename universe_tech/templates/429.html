@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Too many attempts | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow center"><p class="eyebrow">Error 429</p><h1>Too many attempts</h1>
+<p>For your protection we paused this action for a few minutes. Please wait a little and try again, or contact us if you need help.</p>
+<p><a class="btn btn-gold" href="{% url 'home' %}">Back to home</a></p></div></section>
+{% endblock %}

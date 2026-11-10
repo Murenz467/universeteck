@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}Contracts | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>Contracts</h1></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% for c in contracts %}<a class="card link" href="{% url 'contract' c.pk %}"><div class="row"><strong>{{ c.number }} · {{ c.title }}</strong><span class="badge b-{{ c.status }}">{{ c.get_status_display }}</span></div>
+    <p class="muted small">{{ c.total_amount|rwf }}{% if c.signed_at %} · signed {{ c.signed_at|date:"j M Y" }}{% endif %}</p></a>
+  {% empty %}<p class="muted">No contracts yet. We send your contract after you accept a proposal.</p>{% endfor %}
+</div></section>
+{% endblock %}

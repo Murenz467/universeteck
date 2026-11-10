@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Portfolio | Universe Tech{% endblock %}
+{% block desc %}Websites, apps, brands and hosting projects designed, built and launched by Universe Tech.{% endblock %}
+{% block content %}
+
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">Our Portfolio</p>
+      <h1>Work We Are<br><span class="gold">Proud Of</span></h1>
+      <p class="lead">Websites, applications, brands and hosting solutions we have designed, built and launched for businesses and organizations.</p>
+      {% if total %}
+      <ul class="pf-stats pf-stats-left">
+        <li><b>{{ total }}</b><span>Project{{ total|pluralize }} delivered</span></li>
+        <li><b>{{ categories|length }}</b><span>Service area{{ categories|length|pluralize }}</span></li>
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/hero.jpg' %}" alt="Universe Tech website and mobile app on a laptop and phone"></div>
+</section>
+
+<section class="white pf-list">
+  <div class="wrap">
+    {% if categories|length > 1 %}
+    <nav class="pf-filters" aria-label="Filter projects by service">
+      <a href="{% url 'portfolio' %}" {% if not active %}class="on" aria-current="true"{% endif %}>All</a>
+      {% for cat in categories %}<a href="?category={{ cat.slug }}" {% if active == cat.slug %}class="on" aria-current="true"{% endif %}>{{ cat.name }}</a>{% endfor %}
+    </nav>
+    {% endif %}
+
+    {% if cases %}
+    <div class="pf-grid">
+      {% for c in cases %}{% include "portfolio/_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <div class="pf-empty">
+      <span class="ico"><svg><use href="#i-devices"/></svg></span>
+      <h2>{% if active %}No projects in this category yet{% else %}Our case studies are coming soon{% endif %}</h2>
+      <p>{% if active %}Try another category or view everything we have built.{% else %}We are preparing detailed write-ups of our recent work. In the meantime, tell us about your project.{% endif %}</p>
+      {% if active %}<a class="btn btn-green" href="{% url 'portfolio' %}">View all projects</a>
+      {% else %}<a class="btn btn-green" href="{% url 'quote' %}">Get a Quote <svg class="ic"><use href="#i-arrow"/></svg></a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% include "portfolio/_cta.html" %}
+{% endblock %}

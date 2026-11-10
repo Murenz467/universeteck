@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Something went wrong | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow center"><p class="eyebrow">Error 500</p><h1>Something went wrong</h1><p>We hit an unexpected problem. Please try again in a moment or contact us.</p>
+<p><a class="btn btn-gold" href="{% url 'home' %}">Back to home</a> <a class="btn btn-outline" href="{% url 'contact' %}">Contact us</a></p></div></section>
+{% endblock %}

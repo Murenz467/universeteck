@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load trust_tags %}
+{% load static %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow">Your Digital Partner</p>
+      <h1>Turning Your Ideas<br>Into Powerful<br><span class="gold">Digital Solutions</span></h1>
+      <p class="lead">At Universe Tech, we build modern software, create strong brands, and deliver reliable web and mobile applications with secure hosting services.</p>
+      <div class="cta-row">
+        <a class="btn btn-green" href="{% url 'quote' %}">Get Started <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-outline" href="{% url 'services' %}">Explore Our Services</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/hero.jpg' %}" alt="Universe Tech website and mobile app on a laptop and phone"></div>
+</section>
+
+<!-- SERVICES -->
+<section class="mint" id="services">
+  <div class="wrap">
+    <p class="eyebrow line">Our Services</p>
+    <h2>What We Do</h2>
+    <p class="sub">We provide end-to-end digital solutions to help businesses, organizations and individuals grow in the digital world.</p>
+    <div class="svc-cards">
+      <a class="svc-card" href="{% url 'services' %}">
+        <span class="ico"><svg><use href="#i-code"/></svg></span>
+        <h3>Software Development</h3>
+        <p>Custom software solutions that solve real problems and drive your business forward.</p>
+        <svg class="go"><use href="#i-arrow"/></svg>
+      </a>
+      <a class="svc-card" href="{% url 'services' %}">
+        <span class="ico"><svg><use href="#i-brand"/></svg></span>
+        <h3>Branding &amp; Design</h3>
+        <p>Unique brand identities and creative designs that make your business stand out.</p>
+        <svg class="go"><use href="#i-arrow"/></svg>
+      </a>
+      <a class="svc-card" href="{% url 'services' %}">
+        <span class="ico"><svg><use href="#i-devices"/></svg></span>
+        <h3>Web &amp; Mobile Applications</h3>
+        <p>Fast, responsive and user-friendly web and mobile apps for modern businesses.</p>
+        <svg class="go"><use href="#i-arrow"/></svg>
+      </a>
+      <a class="svc-card" href="{% url 'services' %}">
+        <span class="ico"><svg><use href="#i-cloud"/></svg></span>
+        <h3>Hosting Services</h3>
+        <p>Reliable, secure and high-performance hosting for your applications and websites.</p>
+        <svg class="go"><use href="#i-arrow"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="white about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-img"><img src="{% static 'img/about.jpg' %}" alt="The Universe Tech team working together around a laptop"></div>
+    <div>
+      <p class="eyebrow line">About Universe Tech</p>
+      <h2 class="big">Innovative. Reliable.<br><span class="gold">Always with You.</span></h2>
+      <p class="sub">We are a team of passionate developers, designers and IT experts committed to delivering high-quality, scalable and affordable digital solutions. Your success is our priority, and we are here to turn your vision into reality.</p>
+      <ul class="values">
+        <li><span class="vico"><svg><use href="#i-bulb"/></svg></span>Creative<br>Team</li>
+        <li><span class="vico"><svg><use href="#i-shield"/></svg></span>Quality<br>&amp; Security</li>
+        <li><span class="vico"><svg><use href="#i-bolt"/></svg></span>On-Time<br>Delivery</li>
+        <li><span class="vico"><svg><use href="#i-headset"/></svg></span>Ongoing<br>Support</li>
+      </ul>
+      <a class="btn btn-green" href="{% url 'about' %}">More About Us <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="mint work" id="work">
+  <div class="wrap work-grid">
+    <div>
+      <p class="eyebrow line">Our Work</p>
+      <h2>Some of Our Projects</h2>
+      <p class="sub small">We take pride in delivering solutions that make an impact. Here are a few examples of what we've built.</p>
+      <a class="btn btn-green" href="{% url 'portfolio' %}">View Portfolio <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="work-cards">
+      {% for c in projects %}
+      <a href="{% url 'case_detail' c.slug %}">{% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.title }}" loading="lazy">{% endif %}<b>{{ c.title }}</b><span>{{ c.summary|truncatewords:11 }}</span></a>
+      {% empty %}
+      <a href="{% url 'portfolio' %}"><img src="{% static 'img/work-website.jpg' %}" alt=""><b>Business Website</b><span>Modern and responsive website for a growing brand.</span></a>
+      <a href="{% url 'portfolio' %}"><img src="{% static 'img/work-app.jpg' %}" alt=""><b>Mobile App</b><span>Feature-rich mobile application for better user experience.</span></a>
+      <a href="{% url 'portfolio' %}"><img src="{% static 'img/work-brand.jpg' %}" alt=""><b>Brand Identity</b><span>Complete branding and design for a new business.</span></a>
+      <a href="{% url 'portfolio' %}"><img src="{% static 'img/work-hosting.jpg' %}" alt=""><b>Hosting Solution</b><span>Secure and reliable hosting for your applications.</span></a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+{% client_logos %}
+
+{% testimonials 3 %}
+
+<section class="white tr-teaser">
+  <div class="wrap tr-teaser-grid">
+    <a class="tr-tcard" href="{% url 'pricing' %}"><span class="ab-vico"><svg><use href="#i-check"/></svg></span><h3>Clear Pricing</h3><p>See starting prices and how payment works before you ask for a quote.</p><span class="tr-more">View pricing &rarr;</span></a>
+    <a class="tr-tcard" href="{% url 'how_we_work' %}"><span class="ab-vico"><svg><use href="#i-shield"/></svg></span><h3>A Transparent Process</h3><p>Written proposal, signed contract and phase-by-phase approval in your portal.</p><span class="tr-more">How we work &rarr;</span></a>
+    <a class="tr-tcard" href="{% url 'faq' %}"><span class="ab-vico"><svg><use href="#i-headset"/></svg></span><h3>Questions Answered</h3><p>Timelines, payments, support after launch and who owns your project.</p><span class="tr-more">Read the FAQ &rarr;</span></a>
+  </div>
+</section>
+
+<section class="cta-band">
+  <svg class="cta-curves" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true"><path d="M60 200C150 140 260 90 400 20" fill="none" stroke="#e2b94e" stroke-width="1.5"/><path d="M110 200C200 150 300 110 400 60" fill="none" stroke="#e2b94e" stroke-width="1.5"/></svg>
+  <div class="wrap cta-in">
+    <div>
+      <p class="eyebrow line gold-e">Let's Work Together</p>
+      <h2>Ready to Build Something Great?</h2>
+      <p>Have a project in mind or just want to learn more? We'd love to hear from you.</p>
+    </div>
+    <a class="btn btn-gold" href="{% url 'contact' %}">Contact Us <svg class="ic"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+{% endblock %}

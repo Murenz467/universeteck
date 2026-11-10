@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Support | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>Support</h1>
+<p><a class="btn btn-gold" href="{% url 'ticket_new' %}">Open a ticket</a></p></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% for t in tickets %}<a class="card link" href="{% url 'ticket' t.pk %}"><div class="row"><strong>#{{ t.pk }} · {{ t.subject }}</strong><span class="badge b-{{ t.status }}">{{ t.get_status_display }}</span></div>
+  <p class="muted">Updated {{ t.updated|timesince }} ago</p></a>
+  {% empty %}<p class="muted">No tickets yet.</p>{% endfor %}
+</div></section>
+{% endblock %}

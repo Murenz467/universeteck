@@ -1,0 +1,10 @@
+{% autoescape off %}Hello {{ name }},
+
+We created your Universe Tech client account so you can follow your proposal, contract, project progress and invoices in one place.
+
+Set your password here:
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+
+Your username is: {{ user.get_username }}
+
+Universe Tech{% endautoescape %}

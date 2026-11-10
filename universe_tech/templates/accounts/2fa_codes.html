@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Save your recovery codes | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>Two-factor is on ✓</h1></div></section>
+<section class="ivory"><div class="wrap narrow">
+  <p class="note"><b>Save these recovery codes now.</b> Each works once if you lose your phone. They are shown only this one time. Keep them somewhere safe (password manager or printed in a locked place).</p>
+  <ul class="codes">{% for c in codes %}<li><code>{{ c }}</code></li>{% endfor %}</ul>
+  <p><button class="btn btn-outline" type="button" data-print>Print</button> <a class="btn btn-gold" href="{{ next }}">I saved them, continue</a></p>
+</div></section>
+{% endblock %}

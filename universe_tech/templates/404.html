@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Page not found | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow center"><p class="eyebrow">Error 404</p><h1>Page not found</h1><p>The page you are looking for does not exist or has moved.</p>
+<p><a class="btn btn-gold" href="{% url 'home' %}">Back to home</a> <a class="btn btn-outline" href="{% url 'contact' %}">Contact us</a></p></div></section>
+{% endblock %}

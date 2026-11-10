@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Create account | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap"><h1>Create your account</h1>
+<p class="lead dark-text">Track quotations, projects and deliverables in one place.</p></div></section>
+<section class="ivory"><div class="wrap narrow">
+  <form method="post" class="form">{% csrf_token %}
+    {% for f in form %}<div class="field">{{ f.label_tag }}{{ f }}{% for e in f.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>{% endfor %}
+    <button class="btn btn-gold" type="submit">Create account</button>
+  </form>
+</div></section>
+{% endblock %}

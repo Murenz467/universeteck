@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}{{ inv.number }} | Universe Tech{% endblock %}
+{% block content %}
+{% if preview %}<div class="preview-bar">{% if inv.status == "draft" %}DRAFT — not visible to the client yet. {% endif %}Staff preview of {{ inv.client }}'s invoice</div>{% endif %}
+<section class="ivory"><div class="wrap doc-wrap">
+  <article class="doc">
+    <header class="doc-head">
+      <div><p class="eyebrow">{% if inv.status == "paid" %}Receipt{% else %}Invoice{% endif %}</p><h1>{{ inv.number }}</h1>
+        <p class="muted">{{ company.legal_name }}<br>{{ company.address }}{% if company.tin %}<br>TIN: {{ company.tin }}{% endif %}</p></div>
+      <dl class="meta">
+        <dt>Billed to</dt><dd>{{ inv.client.get_full_name|default:inv.client.username }}{% if inv.client.profile.company %}<br>{{ inv.client.profile.company }}{% endif %}</dd>
+        <dt>Issued</dt><dd>{{ inv.issue_date|date:"j F Y" }}</dd>
+        {% if inv.due_date %}<dt>Due</dt><dd>{{ inv.due_date|date:"j F Y" }}{% if inv.is_overdue %} <span class="late">overdue</span>{% endif %}</dd>{% endif %}
+        <dt>Status</dt><dd><span class="badge b-{{ inv.status }}">{{ inv.get_status_display }}</span></dd>
+        {% if inv.project %}<dt>Project</dt><dd>{{ inv.project.title }}</dd>{% endif %}
+      </dl>
+    </header>
+    <h2>{{ inv.title }}</h2>
+    <table class="tbl"><thead><tr><th>Description</th><th>Qty</th><th>Unit</th><th>Amount</th></tr></thead><tbody>
+      {% for i in inv.items.all %}<tr><td>{{ i.description }}</td><td>{{ i.quantity }}</td><td>{{ i.unit_price|rwf }}</td><td>{{ i.line_total|rwf }}</td></tr>{% endfor %}
+    </tbody><tfoot><tr><th colspan="3">Total</th><th>{{ inv.total|rwf }}</th></tr></tfoot></table>
+    {% if inv.notes %}<p class="muted">{{ inv.notes }}</p>{% endif %}
+    {% if inv.status == "paid" %}<p class="paid-stamp">PAID {{ inv.paid_at|date:"j M Y" }}</p>
+      <p class="muted small">Paid by {{ inv.get_payment_method_display|default:"—" }}{% if inv.payment_reference %} · reference {{ inv.payment_reference }}{% endif %}. Thank you.</p>{% endif %}
+  </article>
+
+  <aside class="doc-actions no-print">
+    {% if inv.status == "sent" %}
+      <h3>How to pay</h3>
+      {% for name, details in pay_options %}<p><b>{{ name }}</b><br>{{ details }}</p>
+      {% empty %}<p class="muted">Contact us for payment details: {{ site.phone_display }}.</p>{% endfor %}
+      <p class="muted small">Use <b>{{ inv.number }}</b> as the payment reference.</p>
+      {% if not preview %}
+      <form method="post" action="{% url 'invoice_pay' inv.pk %}" class="form">{% csrf_token %}
+        <h3>I have paid</h3>
+        <div class="field"><label for="pm">Method</label><select id="pm" name="method" required>{% for k, v in methods %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="pr">Transaction ID / reference</label><input type="text" id="pr" name="reference" required maxlength="120"></div>
+        <button class="btn btn-gold">Tell us I paid</button></form>{% endif %}
+    {% elif inv.status == "submitted" %}<p><span class="badge b-submitted">Payment reported</span><br><span class="muted">We are checking your {{ inv.get_payment_method_display }} payment (ref. {{ inv.payment_reference }}). You will get a receipt as soon as it is confirmed.</span></p>{% endif %}
+    <button class="btn btn-outline" type="button" data-print>Print / save as PDF</button>
+  </aside>
+</div></section>
+{% endblock %}

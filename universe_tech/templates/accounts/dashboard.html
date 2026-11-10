@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load humanize ut %}
+{% block title %}My dashboard | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap"><h1>Hello, {{ user.first_name|default:user.username }}</h1>
+<p class="muted">Everything about your work with Universe Tech, in one place.</p></div></section>
+<section class="ivory"><div class="wrap">
+
+  <div class="attn {% if not todo %}ok{% endif %}">
+    <h2>{% if todo %}Needs your attention <span class="dot">{{ todo|length }}</span>{% else %}You are all caught up ✓{% endif %}</h2>
+    {% for what, detail, url, kind in todo %}
+    <a class="card link row" href="{{ url }}"><span><strong>{{ what }}</strong><br><span class="muted">{{ detail }}</span></span><span class="badge b-sent">{{ kind }}</span></a>
+    {% empty %}<p class="muted">Nothing is waiting on you right now. We will alert you when something needs your review.</p>{% endfor %}
+  </div>
+
+  <div class="row"><h2>Your projects</h2><a class="textlink" href="{% url 'project_list' %}">View all</a></div>
+  {% for p in active_projects %}
+  <a class="card link" href="{% url 'project' p.pk %}">
+    <div class="row"><strong>{{ p.title }}</strong><span class="badge b-{{ p.status }}">{{ p.get_status_display }}</span></div>
+    <div class="bar"><i style="width:{{ p.progress }}%"></i></div>
+    <p class="muted small">{{ p.progress }}% complete{% with n=p.next_milestone %}{% if n %} · Next: {{ n.title }}{% if n.due_date %} (due {{ n.due_date|date:"j M" }}){% endif %}{% endif %}{% endwith %}{% if p.is_late %} · <span class="late">behind schedule</span>{% endif %}</p>
+  </a>
+  {% empty %}<p class="muted">No active projects yet. Your project starts as soon as you sign the contract.</p>{% endfor %}
+  {% if done_projects %}<p class="muted small">{{ done_projects|length }} completed project{{ done_projects|length|pluralize }}. <a class="textlink" href="{% url 'project_list' %}">See them</a></p>{% endif %}
+
+  <div class="two dash-cols">
+    <div>
+      <div class="row"><h2>Proposals</h2><a class="textlink" href="{% url 'proposal_list' %}">All</a></div>
+      {% for p in proposals %}<a class="card link" href="{% url 'proposal' p.pk %}"><div class="row"><strong>{{ p.title }}</strong><span class="badge b-{{ p.status }}">{{ p.get_status_display }}</span></div><p class="muted small">{{ p.number }} · {{ p.total|rwf }}</p></a>
+      {% empty %}<p class="muted">No proposals yet.</p>{% endfor %}
+
+      <div class="row"><h2>Contracts</h2><a class="textlink" href="{% url 'contract_list' %}">All</a></div>
+      {% for c in contracts %}<a class="card link" href="{% url 'contract' c.pk %}"><div class="row"><strong>{{ c.title }}</strong><span class="badge b-{{ c.status }}">{{ c.get_status_display }}</span></div><p class="muted small">{{ c.number }}</p></a>
+      {% empty %}<p class="muted">No contracts yet.</p>{% endfor %}
+    </div>
+    <div>
+      <div class="row"><h2>Invoices</h2><a class="textlink" href="{% url 'invoice_list' %}">All</a></div>
+      {% for i in invoices %}<a class="card link" href="{% url 'invoice' i.pk %}"><div class="row"><strong>{{ i.number }} · {{ i.total|rwf }}</strong><span class="badge b-{{ i.status }}">{{ i.get_status_display }}</span></div><p class="muted small">{{ i.title }}{% if i.is_overdue %} · <span class="late">overdue</span>{% endif %}</p></a>
+      {% empty %}<p class="muted">No invoices yet.</p>{% endfor %}
+
+      <div class="row"><h2>Recent alerts</h2><a class="textlink" href="{% url 'notifications' %}">All</a></div>
+      {% for n in recent %}<a class="card link {% if not n.is_read %}unread{% endif %}" href="{% url 'notification_open' n.pk %}"><span>{{ n.message }}</span><p class="muted small">{{ n.created|timesince }} ago</p></a>
+      {% empty %}<p class="muted">No alerts yet.</p>{% endfor %}
+    </div>
+  </div>
+
+  {% if quotations %}<h2>Quotations</h2>
+  {% for q in quotations %}<a class="card link" href="{% url 'quotation' q.pk %}"><div class="row"><strong>{{ q.number }} · {{ q.title }}</strong><span class="badge b-{{ q.status }}">{{ q.get_status_display }}</span></div><p class="muted">{{ q.total|intcomma }} RWF</p></a>{% endfor %}{% endif %}
+
+  <h2>Your requests</h2>
+  {% for r in requests %}<div class="card"><div class="row"><strong>{{ r.created|date:"j M Y" }}</strong><span class="badge">{{ r.get_status_display }}</span></div><p>{{ r.details|truncatechars:140 }}</p></div>
+  {% empty %}<p class="muted">You have not sent a request yet.</p>{% endfor %}
+  <p><a class="btn btn-gold" href="{% url 'quote' %}">Request a new quote</a> <a class="btn btn-outline" href="{% url 'ticket_new' %}">Contact support</a></p>
+</div></section>
+{% endblock %}

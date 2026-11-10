@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}{{ c.number }} Contract | Universe Tech{% endblock %}
+{% block content %}
+{% if preview %}<div class="preview-bar">{% if c.status == "draft" %}DRAFT — not visible to the client yet. {% endif %}Staff preview of {{ c.client }}'s contract</div>{% endif %}
+<section class="ivory"><div class="wrap doc-wrap">
+  <article class="doc">
+    <header class="doc-head">
+      <div><p class="eyebrow">Service agreement</p><h1>{{ c.title }}</h1></div>
+      <dl class="meta">
+        <dt>Contract no.</dt><dd>{{ c.number }}</dd>
+        <dt>Client</dt><dd>{{ c.client.get_full_name|default:c.client.username }}</dd>
+        <dt>Total price</dt><dd>{{ c.total_amount|rwf }}</dd>
+        <dt>Deposit</dt><dd>{{ c.deposit_percent }}% · {{ c.deposit_amount|rwf }}</dd>
+        {% if c.start_date %}<dt>Start date</dt><dd>{{ c.start_date|date:"j F Y" }}</dd>{% endif %}
+        <dt>Status</dt><dd><span class="badge b-{{ c.status }}">{{ c.get_status_display }}</span></dd>
+      </dl>
+    </header>
+    <div class="contract-body">{{ c.body|doc_body }}</div>
+
+    <div class="sigs">
+      <div class="sig"><span class="muted small">For Universe Tech</span>
+        {% if c.company_signed_at %}<div class="sigline">{{ c.company_signed_by }}</div><span class="muted small">{{ c.company_signed_at|date:"j F Y, H:i" }}</span>{% else %}<div class="sigline empty">Signs when the contract is sent</div>{% endif %}</div>
+      <div class="sig"><span class="muted small">For the Client</span>
+        {% if c.status == "signed" %}<div class="sigline">{{ c.signed_name }}</div><span class="muted small">{{ c.signed_at|date:"j F Y, H:i" }} · IP {{ c.signed_ip|default:"—" }}</span>{% else %}<div class="sigline empty">Awaiting signature</div>{% endif %}</div>
+    </div>
+    {% if c.status == "signed" %}<p class="muted small">Electronic signature record · document fingerprint (SHA-256): <code>{{ c.signature_hash }}</code>{% if c.integrity_ok %} · <b>verified: text unchanged since signing</b>{% else %} · <b class="late">warning: text differs from the signed version</b>{% endif %}</p>{% endif %}
+  </article>
+
+  <aside class="doc-actions no-print">
+    {% if c.status == "sent" and not preview %}
+      <h3>Sign this contract</h3>
+      <p class="muted small">Read the agreement carefully. Typing your name below is your legal electronic signature.</p>
+      <form method="post" action="{% url 'contract_sign' c.pk %}" class="form">{% csrf_token %}
+        <div class="field"><label for="sn">Your full name</label><input type="text" id="sn" name="signed_name" required minlength="3" autocomplete="name" value="{{ user.get_full_name }}"></div>
+        <div class="field check"><label><input type="checkbox" name="agree" value="1" required> I have read and agree to this contract.</label></div>
+        <button class="btn btn-gold">Sign contract</button>
+      </form>
+      <details class="chg"><summary class="btn btn-outline">I have a question or want a change</summary>
+        <form method="post" action="{% url 'contract_changes' c.pk %}" class="form">{% csrf_token %}
+          <div class="field"><label for="cc">What would you like to discuss?</label><textarea id="cc" name="comment" rows="4" required></textarea></div>
+          <button class="btn btn-dark">Send to Universe Tech</button></form></details>
+    {% elif c.status == "signed" %}
+      <p><span class="badge b-signed">Signed</span></p>
+      {% if project %}<a class="btn btn-gold" href="{% url 'project' project.pk %}">Open the project</a>{% endif %}
+    {% elif preview %}<p class="muted">Signing controls appear here for the client.</p>{% endif %}
+    <button class="btn btn-outline" type="button" data-print>Print / save as PDF</button>
+    {% if c.proposal %}<a class="btn btn-outline" href="{% url 'proposal' c.proposal.pk %}">View proposal</a>{% endif %}
+  </aside>
+</div></section>
+{% endblock %}

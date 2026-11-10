@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}My projects | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>My projects</h1></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% for p in projects %}
+  <a class="card link" href="{% url 'project' p.pk %}"><div class="row"><strong>{{ p.title }}</strong><span class="badge b-{{ p.status }}">{{ p.get_status_display }}</span></div>
+    <div class="bar"><i style="width:{{ p.progress }}%"></i></div>
+    <p class="muted small">{{ p.progress }}% complete{% if p.target_date %} · target {{ p.target_date|date:"j M Y" }}{% endif %}</p></a>
+  {% empty %}<p class="muted">No projects yet. Your project starts as soon as you sign your contract.</p>{% endfor %}
+</div></section>
+{% endblock %}

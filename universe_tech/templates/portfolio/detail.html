@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ c.title }} | Universe Tech{% endblock %}
+{% block desc %}{{ c.summary }}{% endblock %}
+{% block content %}
+
+<section class="pf-hero pf-hero-sm">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'portfolio' %}">Portfolio</a><span>/</span>{{ c.title }}</nav>
+    {% if c.category %}<p class="eyebrow">{{ c.category.name }}</p>{% endif %}
+    <h1>{{ c.title }}</h1>
+    <p class="lead">{{ c.summary }}</p>
+  </div>
+</section>
+
+<section class="white pf-detail">
+  <div class="wrap pf-detail-grid">
+    <article>
+      <div class="pf-cover">{% include "portfolio/_thumb.html" %}</div>
+      <div class="pf-prose">{{ c.body|linebreaks }}</div>
+      <div class="pf-pager">
+        {% if prev_case %}<a class="prev" href="{% url 'case_detail' prev_case.slug %}"><small>Previous project</small>{{ prev_case.title }}</a>{% else %}<span></span>{% endif %}
+        {% if next_case %}<a class="next" href="{% url 'case_detail' next_case.slug %}"><small>Next project</small>{{ next_case.title }}</a>{% endif %}
+      </div>
+    </article>
+
+    <aside class="pf-side">
+      <h3>Project details</h3>
+      <dl>
+        {% if c.client_name %}<div><dt>Client</dt><dd>{{ c.client_name }}</dd></div>{% endif %}
+        {% if c.category %}<div><dt>Service</dt><dd>{{ c.category.name }}</dd></div>{% endif %}
+        {% if c.live_url %}<div><dt>Website</dt><dd><a href="{{ c.live_url }}" target="_blank" rel="noopener">{{ c.live_url|cut:"https://"|cut:"http://"|cut:"www."|truncatechars:34 }}</a></dd></div>{% endif %}
+      </dl>
+      {% if c.live_url %}<a class="btn btn-green" href="{{ c.live_url }}" target="_blank" rel="noopener">Visit live site <svg class="ic"><use href="#i-arrow"/></svg></a>{% endif %}
+      <a class="btn btn-line" href="{% url 'quote' %}">Start a similar project</a>
+    </aside>
+  </div>
+</section>
+
+{% if related %}
+<section class="mint pf-related">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">More Work</p>
+      <h2>Related Projects</h2>
+    </div>
+    <div class="pf-grid">{% for c in related %}{% include "portfolio/_card.html" %}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+{% include "portfolio/_cta.html" %}
+{% endblock %}

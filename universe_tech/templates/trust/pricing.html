@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static humanize trust_tags %}
+{% block title %}Pricing | Universe Tech{% endblock %}
+{% block desc %}Clear starting prices for websites, web platforms, mobile apps and hosting from Universe Tech in Kigali. Pay a deposit, then pay as you approve each phase.{% endblock %}
+{% block content %}
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">Pricing</p>
+      <h1>Simple Prices,<br><span class="gold">No Surprises</span></h1>
+      <p class="lead">Pick the package closest to what you need. Your final price depends on what you want, what is written in your contract and what we agree together.</p>
+      <ul class="badges">
+        <li><span class="bico"><svg><use href="#i-check"/></svg></span>Free<br>quotation</li>
+        <li><span class="bico"><svg><use href="#i-shield"/></svg></span>Signed<br>contract</li>
+        <li><span class="bico"><svg><use href="#i-clock"/></svg></span>Pay as you<br>approve</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/sp-hero.jpg' %}" alt="Universe Tech website and mobile app on a laptop and phone"></div>
+</section>
+
+{% if packages %}
+<section class="white pr-guide">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Not Sure Where to Start?</p>
+      <h2 class="big">Find Your Package in 10 Seconds</h2>
+    </div>
+    <ul class="pr-pick">
+      {% for p in packages %}
+      <li><a href="#plan-{{ p.name|slugify }}"><span class="pr-pick-ico"><svg><use href="#{{ p.icon }}"/></svg></span>
+        <span class="pr-pick-t"><small>{% if p.best_for %}{{ p.best_for }}{% else %}{{ p.tagline }}{% endif %}</small><b>{{ p.name }}</b></span>
+        <span class="pr-pick-go">&rarr;</span></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="mint pr-plans" id="packages">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Packages</p>
+      <h2 class="big">Starting Prices</h2>
+      <p class="sub">Prices are in Rwandan francs and show where projects usually start. Every project is finalised in a written proposal.</p>
+    </div>
+    <div class="pr-grid">
+      {% for p in packages %}
+      <article class="pr-card{% if p.is_featured %} featured{% endif %}" id="plan-{{ p.name|slugify }}">
+        {% if p.is_featured %}<span class="pr-ribbon">Most popular</span>{% endif %}
+        <header>
+          <span class="pr-ico"><svg><use href="#{{ p.icon }}"/></svg></span>
+          <h3>{{ p.name }}</h3>
+          {% if p.tagline %}<p class="pr-tag">{{ p.tagline }}</p>{% endif %}
+        </header>
+        <div class="pr-price">
+          <span class="pr-from">Starting from</span>
+          <span class="pr-amt"><i>RWF</i> {{ p.price_from|intcomma }}{% if p.billing == "month" %}<em>/month</em>{% endif %}</span>
+          {% with u=p.price_from|usd %}{% if u %}<span class="pr-usd">&asymp; US${{ u|intcomma }}{% if p.billing == "month" %} / month{% endif %}</span>{% endif %}{% endwith %}
+        </div>
+        {% if p.billing == "month" %}<p class="pr-time"><svg><use href="#i-clock"/></svg><b>Billed monthly</b></p>{% elif p.timeline %}<p class="pr-time"><svg><use href="#i-clock"/></svg>Delivery: <b>{{ p.timeline }}</b></p>{% endif %}
+        <ul class="pr-feat">{% for f in p.feature_list %}<li><svg><use href="#i-check"/></svg>{{ f }}</li>{% endfor %}</ul>
+        {% if p.best_for %}<p class="pr-best"><b>Best for:</b> {{ p.best_for }}</p>{% endif %}
+        <a class="btn {% if p.is_featured %}btn-gold{% else %}btn-green{% endif %}" href="{% url 'quote' %}">{{ p.cta_label }} <svg class="ic"><use href="#i-arrow"/></svg></a>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="pr-foot">Need branding, a custom system or something different? <a href="{% url 'quote' %}">Request a free quotation</a> and we will price it for you.</p>
+    <p class="pr-fine">US$ amounts are approximate (about RWF {{ rate|intcomma }} per US$) and are shown for guidance only. Invoices are issued in RWF.</p>
+  </div>
+</section>
+{% else %}
+<section class="white"><div class="wrap"><p class="muted center">Pricing packages are coming soon. <a href="{% url 'quote' %}">Request a quote</a> and we will price your project.</p></div></section>
+{% endif %}
+
+<section class="white pr-set">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Your Price</p>
+      <h2 class="big">How We Set Your Price</h2>
+      <p class="sub">The prices above are where projects start. There is no fixed price list, because every business needs something different.</p>
+    </div>
+    <div class="pr-set-grid">
+      <article><span class="pr-set-n">1</span><h3>What you want</h3><p>The features, pages, screens and integrations you need. A bigger or more complex project costs more, a simpler one costs less.</p></article>
+      <article><span class="pr-set-n">2</span><h3>What we agree</h3><p>We talk about your goals and your budget together. You are welcome to negotiate, and we will find a plan that fits you.</p></article>
+      <article><span class="pr-set-n">3</span><h3>What the contract says</h3><p>Everything we agree is written into your proposal and signed contract: the scope, the phases and the final price. That price does not change unless you ask for extra work.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="deep pr-promise">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both gold-e">Our Price Promise</p>
+      <h2 class="big">Best Value for Your Money</h2>
+      <p class="sub">We want every client to feel they got a great deal and a great product.</p>
+    </div>
+    <div class="pr-promise-grid">
+      <article><h3>Affordable</h3><p>Fair prices built for Rwandan businesses, so good technology is not only for big companies.</p></article>
+      <article><h3>Reliable</h3><p>Written agreements, tested work and ongoing support, so you can depend on what you pay for.</p></article>
+      <article><h3>Friendly</h3><p>Flexible, open to negotiation and paid step by step, never a surprise bill.</p></article>
+      <article><h3>Top quality</h3><p>You do not pay less for worse. You get a modern, secure product built properly.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="white pr-incl">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Included in Every Project</p>
+      <h2 class="big">What You Always Get</h2>
+    </div>
+    <ul class="pr-incl-grid">
+      <li><b>Written proposal</b><span>Scope, phases, price and timeline in writing.</span></li>
+      <li><b>Signed contract</b><span>Signed online and protected from later changes.</span></li>
+      <li><b>Your client portal</b><span>Track progress, files and invoices in one place.</span></li>
+      <li><b>Pay per phase</b><span>You approve each phase before it is invoiced.</span></li>
+      <li><b>Support tickets</b><span>Ask for help any time after launch.</span></li>
+      <li><b>Free fixes</b><span>Defects reported in the warranty period are fixed free.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="mint pr-pay">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">How Payment Works</p>
+      <h2 class="big">Four Easy Steps</h2>
+      <p class="sub">Pay by MTN MoMo, Airtel Money or bank transfer. A deposit to start, then you pay as you approve each phase.</p>
+    </div>
+    <ol class="pr-steps">
+      <li><span class="pr-step-n">01</span><h3>{{ deposit }}% deposit</h3><p>You pay {{ deposit }}% of the total price after you sign the contract. Work starts when we receive it.</p></li>
+      <li><span class="pr-step-n">02</span><h3>Approve a phase</h3><p>We finish a phase. You check it and approve it, or ask for changes.</p></li>
+      <li><span class="pr-step-n">03</span><h3>Pay the rest in phases</h3><p>Each invoice is due {{ due_days }} days after it is issued. Your {{ deposit }}% deposit is already credited.</p></li>
+      <li><span class="pr-step-n">04</span><h3>Get your receipt</h3><p>We confirm your payment and your receipt appears in your portal.</p></li>
+    </ol>
+    <p class="pr-foot"><a href="{% url 'how_we_work' %}">See the full step-by-step process &rarr;</a></p>
+  </div>
+</section>
+
+<section class="white tr-faq-sec">
+  <div class="wrap narrow">
+    <div class="sec-head">
+      <p class="eyebrow both">Questions</p>
+      <h2 class="big">About Pricing &amp; Payment</h2>
+    </div>
+    {% faq_preview "pricing" 4 %}
+    {% faq_preview "payment" 3 %}
+    <p class="tr-foot"><a href="{% url 'faq' %}">Read all frequently asked questions</a></p>
+  </div>
+</section>
+
+{% testimonials 3 %}
+
+<section class="cta-band">
+  <svg class="cta-curves" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true"><path d="M60 200C150 140 260 90 400 20" fill="none" stroke="#e2b94e" stroke-width="1.5"/><path d="M110 200C200 150 300 110 400 60" fill="none" stroke="#e2b94e" stroke-width="1.5"/></svg>
+  <div class="wrap cta-in">
+    <div><p class="eyebrow line gold-e">Free Quotation</p><h2>Want an exact price for your project?</h2><p>Tell us what you need and we will reply within one business day.</p></div>
+    <a class="btn btn-gold" href="{% url 'quote' %}">Get a Quote <svg class="ic"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+{% endblock %}

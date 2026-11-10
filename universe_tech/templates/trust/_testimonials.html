@@ -1,0 +1,24 @@
+{% if items %}
+<section class="mint tr-testi">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Client Words</p>
+      <h2 class="big">What Our Clients Say</h2>
+    </div>
+    <div class="tr-testi-grid">
+      {% for t in items %}
+      <figure class="tr-quote">
+        {% if t.is_sample %}<span class="tr-sample">Sample</span>{% endif %}
+        <div class="tr-stars" aria-label="{{ t.rating }} out of 5">{% for _ in t.stars %}<svg><use href="#i-star"/></svg>{% endfor %}</div>
+        <blockquote>{{ t.quote }}</blockquote>
+        <figcaption>
+          {% if t.photo %}<img src="{{ t.photo.url }}" alt="" width="48" height="48" loading="lazy">{% else %}<span class="tr-av">{{ t.name|slice:":1" }}</span>{% endif %}
+          <span><b>{{ t.name }}</b>{% if t.role or t.company %}<small>{{ t.role }}{% if t.role and t.company %}, {% endif %}{{ t.company }}</small>{% endif %}</span>
+        </figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+    {% if has_sample %}<p class="tr-note">Sample testimonials shown. Replace them with real client quotes in Admin &rsaquo; Trust &amp; pricing.</p>{% endif %}
+  </div>
+</section>
+{% endif %}

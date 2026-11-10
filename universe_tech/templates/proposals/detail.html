@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}{{ p.number }} {{ p.title }} | Universe Tech{% endblock %}
+{% block content %}
+{% if preview %}<div class="preview-bar">{% if p.status == "draft" %}DRAFT — not visible to the client yet. {% endif %}Staff preview of {{ p.client }}'s proposal</div>{% endif %}
+<section class="ivory"><div class="wrap doc-wrap">
+  <article class="doc">
+    <header class="doc-head">
+      <div><p class="eyebrow">Project proposal{% if p.version > 1 %} · version {{ p.version }}{% endif %}</p><h1>{{ p.title }}</h1></div>
+      <dl class="meta">
+        <dt>Number</dt><dd>{{ p.number }}</dd>
+        <dt>Prepared for</dt><dd>{{ p.client.get_full_name|default:p.client.username }}</dd>
+        {% if p.sent_at %}<dt>Date</dt><dd>{{ p.sent_at|date:"j F Y" }}</dd>{% endif %}
+        {% if p.valid_until %}<dt>Valid until</dt><dd>{{ p.valid_until|date:"j F Y" }}</dd>{% endif %}
+        <dt>Status</dt><dd><span class="badge b-{{ p.status }}">{{ p.get_status_display }}</span></dd>
+      </dl>
+    </header>
+
+    {% if p.is_expired %}<p class="note"><b>This proposal has expired.</b> Contact us and we will refresh it for you.</p>{% endif %}
+    {% if p.status == "changes" %}<p class="note"><b>You asked for changes:</b> {{ p.client_comment }}<br><span class="muted">We are revising the proposal and will notify you.</span></p>{% endif %}
+
+    {% if p.summary %}<h2>Summary</h2>{{ p.summary|linebreaks }}{% endif %}
+    {% if p.objectives %}<h2>Objectives</h2>{{ p.objectives|linebreaks }}{% endif %}
+    {% if p.scope %}<h2>Scope of work</h2>{{ p.scope|linebreaks }}{% endif %}
+    {% if p.deliverable_list %}<h2>Deliverables</h2><ul class="checks2">{% for d in p.deliverable_list %}<li>{{ d }}</li>{% endfor %}</ul>{% endif %}
+
+    <h2>Phases, timeline and price</h2>
+    <table class="tbl"><thead><tr><th>#</th><th>Phase</th><th>Duration</th><th>Price</th></tr></thead><tbody>
+      {% for ph in p.phases.all %}<tr><td>{{ forloop.counter }}</td><td><strong>{{ ph.title }}</strong>{% if ph.description %}<br><span class="muted small">{{ ph.description }}</span>{% endif %}</td><td>{{ ph.duration_days }} day{{ ph.duration_days|pluralize }}</td><td>{{ ph.amount|rwf }}</td></tr>{% endfor %}
+    </tbody><tfoot>
+      <tr><th colspan="2">Total</th><th>{% if p.duration_days %}≈ {{ p.duration_days }} days{% endif %}</th><th>{{ p.total|rwf }}</th></tr>
+      <tr><td colspan="3" class="muted">Deposit due at signing ({{ p.deposit_percent }}%)</td><td>{{ p.deposit_amount|rwf }}</td></tr>
+    </tfoot></table>
+    {% if p.timeline_note %}<p class="muted">{{ p.timeline_note }}</p>{% endif %}
+
+    {% if p.assumptions %}<h2>What we need from you</h2>{{ p.assumptions|linebreaks }}{% endif %}
+    {% if p.exclusions %}<h2>Not included</h2>{{ p.exclusions|linebreaks }}{% endif %}
+    {% if p.payment_terms %}<h2>Payment terms</h2>{{ p.payment_terms|linebreaks }}{% endif %}
+  </article>
+
+  <aside class="doc-actions no-print">
+    {% if p.can_respond and not preview %}
+      <h3>Your decision</h3>
+      <form method="post" action="{% url 'proposal_respond' p.pk %}" class="form">{% csrf_token %}
+        <div class="field"><label for="pc">Comment (required if you want changes)</label><textarea id="pc" name="comment" rows="4"></textarea></div>
+        <button class="btn btn-gold" name="action" value="accept" data-confirm="Accept this proposal? We will then prepare your contract.">Accept proposal</button>
+        <button class="btn btn-outline" name="action" value="changes">Request changes</button>
+        <button class="btn btn-dark" name="action" value="decline" data-confirm="Decline this proposal?">Decline</button>
+      </form>
+    {% elif p.status == "accepted" %}
+      <p><span class="badge b-accepted">Accepted</span> {{ p.responded_at|date:"j M Y" }}</p>
+      {% if contract %}<a class="btn btn-gold" href="{% url 'contract' contract.pk %}">{% if contract.status == "sent" %}Review and sign contract{% else %}View contract{% endif %}</a>
+      {% else %}<p class="muted">We are preparing your contract. You will be notified when it is ready to sign.</p>{% endif %}
+    {% elif p.status == "declined" %}<p class="muted">You declined this proposal.</p>
+    {% elif preview %}<p class="muted">Client actions appear here.</p>{% endif %}
+    <button class="btn btn-outline" type="button" data-print>Print / save as PDF</button>
+    <a class="btn btn-outline" href="{% url 'ticket_new' %}">Ask a question</a>
+  </aside>
+</div></section>
+{% endblock %}

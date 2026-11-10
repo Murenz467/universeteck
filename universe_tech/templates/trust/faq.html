@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}FAQ | Universe Tech{% endblock %}
+{% block desc %}Answers about pricing, timelines, payments, support after launch and who owns your website or app when you work with Universe Tech.{% endblock %}
+{% block content %}
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">FAQ</p>
+      <h1>Your Questions,<br><span class="gold">Answered</span></h1>
+      <p class="lead">Everything people usually ask before starting a project with us: price, time, payment, support and ownership.</p>
+      <ul class="badges">
+        <li><span class="bico"><svg><use href="#i-check"/></svg></span>Honest<br>answers</li>
+        <li><span class="bico"><svg><use href="#i-headset"/></svg></span>Still unsure?<br>Ask us</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/sp-hero.jpg' %}" alt="Universe Tech website and mobile app on a laptop and phone"></div>
+</section>
+
+<section class="white tr-faq-sec">
+  <div class="wrap narrow">
+    {% if groups %}
+    <nav class="tr-chips" aria-label="FAQ topics">{% for g in groups %}<a href="#{{ g.key }}">{{ g.label }}</a>{% endfor %}</nav>
+    {% for g in groups %}
+    <h2 class="tr-gh" id="{{ g.key }}">{{ g.label }}</h2>
+    <div class="tr-faq">
+      {% for q in g.items %}<details class="tr-q"><summary>{{ q.question }}</summary><div class="tr-a">{{ q.answer|linebreaks }}</div></details>{% endfor %}
+    </div>
+    {% endfor %}
+    {% else %}<p class="muted center">Questions are coming soon.</p>{% endif %}
+    <div class="tr-ask">
+      <h3>Did not find your answer?</h3>
+      <p>Send us a message and we will reply within one business day.</p>
+      <a class="btn btn-green" href="{% url 'contact' %}">Contact Us <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+{% if groups %}<script type="application/ld+json">{{ faq_ld|safe }}</script>{% endif %}
+{% endblock %}

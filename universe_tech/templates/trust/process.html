@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static trust_tags %}
+{% block title %}How We Work | Universe Tech{% endblock %}
+{% block desc %}From quote to launch: written proposal, signed contract, deposit, phase-by-phase approval and clear invoices, all in your own client portal.{% endblock %}
+{% block content %}
+<section class="hero sp-hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow line">How We Work</p>
+      <h1>A Clear Path<br><span class="gold">From Idea to Launch</span></h1>
+      <p class="lead">Most agencies work on trust and email threads. We give you a written proposal, a signed contract and a client portal where you approve every phase and see every invoice.</p>
+      <ul class="badges">
+        <li><span class="bico"><svg><use href="#i-shield"/></svg></span>Signed<br>contract</li>
+        <li><span class="bico"><svg><use href="#i-check"/></svg></span>Approve every<br>phase</li>
+        <li><span class="bico"><svg><use href="#i-clock"/></svg></span>Track in<br>your portal</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hero-media"><img src="{% static 'img/sp-hero.jpg' %}" alt="Universe Tech website and mobile app on a laptop and phone"></div>
+</section>
+
+<section class="white tr-journey">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow both">Seven Simple Steps</p>
+      <h2 class="big">Your Project Journey</h2>
+      <p class="sub">Every step happens in the open, so you always know what has been agreed, what is done and what you owe.</p>
+    </div>
+    <ol class="tr-tl">
+      {% for s in steps %}
+      <li>
+        <span class="tr-tl-n">{{ s.n }}</span>
+        <div class="tr-tl-card">
+          <span class="tr-tl-ico"><svg><use href="#{{ s.icon }}"/></svg></span>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.what }}</p>
+          <p class="tr-you"><b>For you:</b> {{ s.you }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="mint tr-promises">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow both">Our Promise</p><h2 class="big">What You Can Count On</h2></div>
+    <div class="ab-val-grid">
+      <article class="ab-val"><span class="ab-vico"><svg><use href="#i-shield"/></svg></span><h3>Written agreements</h3><p>Scope, phases, price and timeline are in writing before any work starts.</p></article>
+      <article class="ab-val"><span class="ab-vico"><svg><use href="#i-check"/></svg></span><h3>No surprise bills</h3><p>A phase is invoiced only after you approve it, and the total always matches your contract.</p></article>
+      <article class="ab-val"><span class="ab-vico"><svg><use href="#i-users"/></svg></span><h3>Your own portal</h3><p>Proposals, contracts, deliverables, invoices and support tickets in one place.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="white tr-faq-sec">
+  <div class="wrap narrow">
+    <div class="sec-head"><p class="eyebrow both">Good to Know</p><h2 class="big">Timelines &amp; Support</h2></div>
+    {% faq_preview "timeline" 3 %}
+    {% faq_preview "after" 3 %}
+    <p class="tr-foot"><a href="{% url 'faq' %}">Read all frequently asked questions</a> &middot; <a href="{% url 'pricing' %}">See pricing</a></p>
+  </div>
+</section>
+
+<section class="cta-band">
+  <svg class="cta-curves" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true"><path d="M60 200C150 140 260 90 400 20" fill="none" stroke="#e2b94e" stroke-width="1.5"/><path d="M110 200C200 150 300 110 400 60" fill="none" stroke="#e2b94e" stroke-width="1.5"/></svg>
+  <div class="wrap cta-in">
+    <div><p class="eyebrow line gold-e">Step One</p><h2>Ready to start your project?</h2><p>Request a free quotation and we will send a written proposal.</p></div>
+    <a class="btn btn-gold" href="{% url 'quote' %}">Get a Quote <svg class="ic"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+{% endblock %}

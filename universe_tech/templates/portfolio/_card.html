@@ -1,0 +1,12 @@
+<a class="pf-card" href="{% url 'case_detail' c.slug %}">
+  <div class="pf-media">
+    {% include "portfolio/_thumb.html" %}
+    {% if c.category %}<span class="pf-tag">{{ c.category.name }}</span>{% endif %}
+  </div>
+  <div class="pf-body">
+    {% if c.client_name %}<p class="pf-client">{{ c.client_name }}</p>{% endif %}
+    <h3>{{ c.title }}</h3>
+    <p class="pf-sum">{{ c.summary }}</p>
+    <span class="pf-more">View case study <svg class="ic"><use href="#i-arrow"/></svg></span>
+  </div>
+</a>

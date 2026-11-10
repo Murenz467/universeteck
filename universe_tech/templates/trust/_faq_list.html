@@ -1,0 +1,7 @@
+{% if items %}
+<div class="tr-faq">
+  {% for q in items %}
+  <details class="tr-q"><summary>{{ q.question }}</summary><div class="tr-a">{{ q.answer|linebreaks }}</div></details>
+  {% endfor %}
+</div>
+{% endif %}

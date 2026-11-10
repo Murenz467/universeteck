@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load ut %}
+{% block title %}Proposals | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>Proposals</h1></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% for p in proposals %}<a class="card link" href="{% url 'proposal' p.pk %}"><div class="row"><strong>{{ p.number }} · {{ p.title }}</strong><span class="badge b-{{ p.status }}">{{ p.get_status_display }}</span></div>
+    <p class="muted small">{{ p.total|rwf }}{% if p.sent_at %} · sent {{ p.sent_at|date:"j M Y" }}{% endif %}{% if p.version > 1 %} · version {{ p.version }}{% endif %}</p></a>
+  {% empty %}<p class="muted">No proposals yet. After you request a quote we will prepare one for you.</p>{% endfor %}
+</div></section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Alerts | Universe Tech{% endblock %}
+{% block content %}
+<section class="ivory page-head"><div class="wrap narrow"><h1>Alerts</h1>
+  <div class="cta-row">
+    <a class="btn {% if not only_unread %}btn-green{% else %}btn-outline{% endif %}" href="{% url 'notifications' %}">All</a>
+    <a class="btn {% if only_unread %}btn-green{% else %}btn-outline{% endif %}" href="{% url 'notifications' %}?filter=unread">Unread{% if unread_count %} ({{ unread_count }}){% endif %}</a>
+    <form method="post" action="{% url 'notifications_read_all' %}">{% csrf_token %}<button class="btn btn-outline">Mark all as read</button></form>
+  </div></div></section>
+<section class="ivory"><div class="wrap narrow">
+  {% for n in items %}
+  <a class="card link {% if not n.is_read %}unread{% endif %}" href="{% url 'notification_open' n.pk %}">
+    <div class="row"><span><span class="kind">{{ n.get_kind_display }}</span> {{ n.message }}</span><span class="muted small">{{ n.created|timesince }} ago</span></div></a>
+  {% empty %}<p class="muted">{% if only_unread %}You have no unread alerts.{% else %}Nothing here yet. We will alert you about proposals, contracts, project progress, invoices and support replies.{% endif %}</p>{% endfor %}
+</div></section>
+{% endblock %}
